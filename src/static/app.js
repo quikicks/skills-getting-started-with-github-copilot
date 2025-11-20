@@ -52,9 +52,38 @@ document.addEventListener("DOMContentLoaded", () => {
            details.participants.forEach((p) => {
              const li = document.createElement("li");
              li.className = "participant";
-             li.textContent = p;
-            // Visual styling for list items moved to src/static/styles.css (use .participants-list li / .participant)
              li.setAttribute("role", "listitem");
+
+             // Participant name span
+             const nameSpan = document.createElement("span");
+             nameSpan.textContent = p;
+             li.appendChild(nameSpan);
+
+             // Delete icon
+             const deleteIcon = document.createElement("span");
+             deleteIcon.className = "delete-icon";
+             deleteIcon.title = "Unregister participant";
+             deleteIcon.innerHTML = "&#128465;"; // Unicode trash can
+             deleteIcon.addEventListener("click", async (e) => {
+               e.stopPropagation();
+               // Unregister API call
+               try {
+                 const response = await fetch(`/activities/${encodeURIComponent(name)}/unregister?email=${encodeURIComponent(p)}`, {
+                   method: "POST"
+                 });
+                 if (response.ok) {
+                   // Remove participant from UI
+                   li.remove();
+                 } else {
+                   const result = await response.json();
+                   alert(result.detail || "Failed to unregister participant.");
+                 }
+               } catch (err) {
+                 alert("Error unregistering participant.");
+               }
+             });
+             li.appendChild(deleteIcon);
+
              participantsList.appendChild(li);
            });
            participantsContainer.appendChild(participantsList);
@@ -101,6 +130,8 @@ document.addEventListener("DOMContentLoaded", () => {
         messageDiv.textContent = result.message;
         messageDiv.className = "success";
         signupForm.reset();
+        // Refresh activities list so UI updates immediately
+        fetchActivities();
       } else {
         messageDiv.textContent = result.detail || "An error occurred";
         messageDiv.className = "error";

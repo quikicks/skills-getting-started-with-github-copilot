@@ -163,9 +163,10 @@ footer {
 }
 
 /* Participants list */
+/* Hide bullet points */
 .participants-list {
-  list-style: disc;
-  margin: 6px 0 0 1.2rem;
+  list-style: none;
+  margin: 6px 0 0 0;
   padding: 0;
   max-height: 120px;
   overflow-y: auto;
@@ -184,9 +185,23 @@ footer {
 /* Participants list items */
 .participants-list li,
 .participant {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 6px 0;
   border-bottom: 1px solid rgba(0,0,0,0.04);
   font-size: 0.95rem;
+}
+
+.delete-icon {
+  cursor: pointer;
+  margin-left: 10px;
+  color: #c62828;
+  font-size: 1.1em;
+  transition: color 0.2s;
+}
+.delete-icon:hover {
+  color: #a31515;
 }
 
 /* Remove bottom border from last item for cleaner look */
