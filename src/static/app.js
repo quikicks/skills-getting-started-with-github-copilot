@@ -32,32 +32,39 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="participants"><strong>Participants:</strong></div>
         `;
 
+        // Visual styling moved to src/static/styles.css (use .activity-card)
+
         // Build the participants list (bulleted). If none, show a friendly note.
         const participantsContainer = activityCard.querySelector(".participants");
-        const participantsList = document.createElement("ul");
-        participantsList.className = "participants-list";
-        // Inline styles to keep it looking tidy without editing CSS files
-        participantsList.style.listStyle = "disc";
-        participantsList.style.margin = "6px 0 0 1.2rem";
-        participantsList.style.padding = "0";
+        // Visual styling for participants moved to src/static/styles.css (use .participants)
+         // Announce additions to assistive tech
+         participantsContainer.setAttribute("aria-live", "polite");
+         participantsContainer.setAttribute("aria-relevant", "additions text");
 
-        if (Array.isArray(details.participants) && details.participants.length > 0) {
-          details.participants.forEach((p) => {
-            const li = document.createElement("li");
-            li.className = "participant";
-            li.textContent = p;
-            li.style.padding = "2px 0";
-            participantsList.appendChild(li);
-          });
-          participantsContainer.appendChild(participantsList);
-        } else {
-          const none = document.createElement("div");
-          none.className = "no-participants";
-          none.textContent = "No participants yet.";
-          none.style.fontStyle = "italic";
-          none.style.marginTop = "6px";
-          participantsContainer.appendChild(none);
-        }
+         const participantsList = document.createElement("ul");
+         participantsList.className = "participants-list";
+        // Visual/scroll styling moved to src/static/styles.css (use .participants-list)
+         participantsList.tabIndex = 0;
+         participantsList.setAttribute("aria-label", `${name} participants`);
+         participantsList.setAttribute("role", "list");
+
+         if (Array.isArray(details.participants) && details.participants.length > 0) {
+           details.participants.forEach((p) => {
+             const li = document.createElement("li");
+             li.className = "participant";
+             li.textContent = p;
+            // Visual styling for list items moved to src/static/styles.css (use .participants-list li / .participant)
+             li.setAttribute("role", "listitem");
+             participantsList.appendChild(li);
+           });
+           participantsContainer.appendChild(participantsList);
+         } else {
+           const none = document.createElement("div");
+           none.className = "no-participants";
+           none.textContent = "No participants yet.";
+          // Visual styling for empty state moved to src/static/styles.css (use .no-participants)
+           participantsContainer.appendChild(none);
+         }
 
         activitiesList.appendChild(activityCard);
 
